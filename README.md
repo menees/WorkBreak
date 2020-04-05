@@ -1,4 +1,4 @@
-![windows build](https://github.com/bmenees/WorkBreak/workflows/windows%20build/badge.svg)
+![windows build](https://github.com/menees/WorkBreak/workflows/windows%20build/badge.svg)
 
 # Work Break
 
