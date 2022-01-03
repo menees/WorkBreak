@@ -20,7 +20,7 @@ namespace WorkBreak
 		{
 			TimeSpan result = TimeSpan.Zero;
 
-			LASTINPUTINFO info = new LASTINPUTINFO
+			LASTINPUTINFO info = new()
 			{
 				cbSize = LASTINPUTINFO.SizeOf,
 			};
@@ -56,7 +56,7 @@ namespace WorkBreak
 			// http://www.codeproject.com/Articles/12002/ScreenSaverNow-Starts-the-Screensaver
 			const int WM_SYSCOMMAND = 0x112;
 			const int SC_SCREENSAVE_VALUE = 0xF140;
-			IntPtr SC_SCREENSAVE = new IntPtr(SC_SCREENSAVE_VALUE);
+			IntPtr SC_SCREENSAVE = new(SC_SCREENSAVE_VALUE);
 			IntPtr hWnd = GetDesktopWindow();
 			SendMessage(hWnd, WM_SYSCOMMAND, SC_SCREENSAVE, IntPtr.Zero);
 		}
@@ -71,7 +71,7 @@ namespace WorkBreak
 				const uint FLASHW_TRAY = 2;
 				const uint FLASHW_ALL = FLASHW_CAPTION | FLASHW_TRAY;
 
-				FLASHWINFO info = new FLASHWINFO
+				FLASHWINFO info = new()
 				{
 					cbSize = FLASHWINFO.SizeOf,
 					hwnd = window.Handle,

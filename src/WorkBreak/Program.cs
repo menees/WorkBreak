@@ -20,9 +20,9 @@
 	{
 		#region Private Data Members
 
-		private System.Windows.Forms.Timer timer;
-		private NotifyIcon trayIcon;
-		private StatusWindow statusWindow;
+		private System.Windows.Forms.Timer? timer;
+		private NotifyIcon? trayIcon;
+		private StatusWindow? statusWindow;
 		private DateTime? workStartedUtc;
 		private TimeSpan totalSnoozeTime;
 		private bool startedScreenSaver;
@@ -41,10 +41,12 @@
 
 			// Create a tray icon with no parent form.
 			// http://bluehouse.wordpress.com/2006/01/24/how-to-create-a-notify-icon-in-c-without-a-form/
-			this.trayIcon = new NotifyIcon();
-			this.trayIcon.Visible = true;
-			this.trayIcon.Icon = new Icon(Properties.Resources.Icon16_Stopwatch_00, SystemInformation.SmallIconSize);
-			this.trayIcon.ContextMenuStrip = new ContextMenuStrip();
+			this.trayIcon = new NotifyIcon
+			{
+				Visible = true,
+				Icon = new Icon(Properties.Resources.Icon16_Stopwatch_00, SystemInformation.SmallIconSize),
+				ContextMenuStrip = new ContextMenuStrip(),
+			};
 			this.trayIcon.DoubleClick += this.ShowStatus_Click;
 
 			// Windows uses the tooltip text to identify an icon for its tray notification settings.
@@ -68,8 +70,10 @@
 			this.statusWindow.VisibleChanged += this.StatusWindow_VisibleChanged;
 
 			// Set up the timer.
-			this.timer = new System.Windows.Forms.Timer();
-			this.timer.Interval = (int)TimeSpan.FromSeconds(1).TotalMilliseconds;
+			this.timer = new System.Windows.Forms.Timer
+			{
+				Interval = (int)TimeSpan.FromSeconds(1).TotalMilliseconds,
+			};
 			this.timer.Tick += this.Timer_Tick;
 			this.timer.Start();
 		}
@@ -172,12 +176,12 @@
 		[STAThread]
 		private static void Main()
 		{
-			using (Mutex mutex = new Mutex(true, "Menees.WorkBreak", out bool createdNew))
+			using (Mutex mutex = new(true, "Menees.WorkBreak", out bool createdNew))
 			{
 				if (createdNew)
 				{
 					WindowsUtility.InitializeApplication("Work Break", null);
-					using Program program = new Program();
+					using Program program = new();
 					Application.Run(program);
 
 					// Force the mutex to live the whole life of the program
@@ -245,12 +249,12 @@
 			switch (status)
 			{
 				case WorkStatus.Idle:
-					this.statusWindow.Hide();
-					this.statusWindow.UpdateStatus(false, string.Empty);
+					this.statusWindow?.Hide();
+					this.statusWindow?.UpdateStatus(false, string.Empty);
 					break;
 
 				case WorkStatus.Working:
-					this.statusWindow.UpdateStatus(false, this.BuildMessage(status));
+					this.statusWindow?.UpdateStatus(false, this.BuildMessage(status));
 					break;
 
 				case WorkStatus.BreakRequired:
@@ -268,7 +272,7 @@
 						}
 					}
 
-					this.statusWindow.UpdateStatus(true, this.BuildMessage(status, idleTime, timeUntilScreenSaver));
+					this.statusWindow?.UpdateStatus(true, this.BuildMessage(status, idleTime, timeUntilScreenSaver));
 					this.ShowStatus(false);
 					break;
 			}
@@ -299,94 +303,97 @@
 
 		private void SetProgressImage(int imageIndex)
 		{
-			// If these images change, then GetProgressImageIndex also needs to be changed.
-			switch (imageIndex)
+			if (this.trayIcon != null && this.statusWindow != null)
 			{
+				// If these images change, then GetProgressImageIndex also needs to be changed.
+				switch (imageIndex)
+				{
 #pragma warning disable MEN010 // Avoid magic numbers. These are image indexes for positions on the clock face.
-				case 1:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_01;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_01);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_01;
-					break;
+					case 1:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_01;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_01);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_01;
+						break;
 
-				case 2:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_02;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_02);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_02;
-					break;
+					case 2:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_02;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_02);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_02;
+						break;
 
-				case 3:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_03;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_03);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_03;
-					break;
+					case 3:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_03;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_03);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_03;
+						break;
 
-				case 4:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_04;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_04);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_04;
-					break;
+					case 4:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_04;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_04);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_04;
+						break;
 
-				case 5:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_05;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_05);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_05;
-					break;
+					case 5:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_05;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_05);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_05;
+						break;
 
-				case 6:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_06;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_06);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_06;
-					break;
+					case 6:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_06;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_06);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_06;
+						break;
 
-				case 7:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_07;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_07);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_07;
-					break;
+					case 7:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_07;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_07);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_07;
+						break;
 
-				case 8:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_08;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_08);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_08;
-					break;
+					case 8:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_08;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_08);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_08;
+						break;
 
-				case 9:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_09;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_09);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_09;
-					break;
+					case 9:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_09;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_09);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_09;
+						break;
 
-				case 10:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_10;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_10);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_10;
-					break;
+					case 10:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_10;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_10);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_10;
+						break;
 
-				case 11:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_11;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_11);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_11;
-					break;
+					case 11:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_11;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_11);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_11;
+						break;
 
-				case 12:
+					case 12:
 #pragma warning restore MEN010 // Avoid magic numbers
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_12;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_12);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_12;
-					break;
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_12;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_12);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_12;
+						break;
 
-				default:
-					this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_00;
-					this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_00);
-					this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_00;
-					break;
+					default:
+						this.trayIcon.Icon = Properties.Resources.Icon16_Stopwatch_00;
+						this.statusWindow.UpdateProgressImage(Properties.Resources.Png48_Stopwatch_00);
+						this.statusWindow.Icon = Properties.Resources.Icon32_Stopwatch_00;
+						break;
+				}
 			}
 		}
 
 		private string BuildMessage(WorkStatus status, TimeSpan? idleTime = null, TimeSpan? timeUntilScreenSaver = null)
 		{
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new();
 
 			TimeSpan workTime = this.CurrentActualWorkTime;
 			int minutes = (int)workTime.TotalMinutes;
@@ -422,7 +429,7 @@
 
 		private void ShowStatus(bool userInitiated)
 		{
-			if (!this.statusWindow.Visible)
+			if (this.statusWindow != null && !this.statusWindow.Visible)
 			{
 				this.statusWindow.Show();
 
@@ -445,20 +452,20 @@
 
 		#region Private Event Handlers
 
-		private void ShowStatus_Click(object sender, EventArgs e)
+		private void ShowStatus_Click(object? sender, EventArgs e)
 		{
 			this.UpdateUI();
 			this.ShowStatus(true);
 		}
 
-		private void ResetTimer_Click(object sender, EventArgs e)
+		private void ResetTimer_Click(object? sender, EventArgs e)
 		{
 			this.ClearWorkTime();
 		}
 
-		private void Options_Click(object sender, EventArgs e)
+		private void Options_Click(object? sender, EventArgs e)
 		{
-			using (OptionsDialog dialog = new OptionsDialog())
+			using (OptionsDialog dialog = new())
 			{
 				if (dialog.Execute())
 				{
@@ -468,26 +475,30 @@
 		}
 
 #pragma warning disable CC0091 // Use static method. Designer likes instance event handlers.
-		private void About_Click(object sender, EventArgs e)
+		private void About_Click(object? sender, EventArgs e)
 #pragma warning restore CC0091 // Use static method
 		{
 			WindowsUtility.ShowAboutBox(null, Assembly.GetExecutingAssembly());
 		}
 
-		private void Exit_Click(object sender, EventArgs e)
+		private void Exit_Click(object? sender, EventArgs e)
 		{
-			this.trayIcon.Visible = false;
+			if (this.trayIcon != null)
+			{
+				this.trayIcon.Visible = false;
+			}
+
 			Application.Exit();
 		}
 
-		private void Timer_Tick(object sender, EventArgs e)
+		private void Timer_Tick(object? sender, EventArgs e)
 		{
 			this.UpdateUI();
 		}
 
-		private void StatusWindow_VisibleChanged(object sender, EventArgs e)
+		private void StatusWindow_VisibleChanged(object? sender, EventArgs e)
 		{
-			if (!this.statusWindow.Visible)
+			if (this.statusWindow != null && !this.statusWindow.Visible)
 			{
 				WorkStatus status = this.Status;
 

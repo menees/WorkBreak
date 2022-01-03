@@ -88,7 +88,7 @@
 				Rectangle primaryArea = primaryScreen.WorkingArea;
 				int newX = primaryArea.Right - form.Width - Padding;
 				int newY = primaryArea.Bottom - form.Height - Padding;
-				Point newLocation = new Point(newX, newY);
+				Point newLocation = new(newX, newY);
 				form.Location = newLocation;
 			}
 		}
@@ -99,7 +99,7 @@
 
 		private void AddSnoozeItem(TimeSpan snoozeTime, bool isCurrent)
 		{
-			ToolStripMenuItem item = new ToolStripMenuItem();
+			ToolStripMenuItem item = new();
 			int minutes = (int)snoozeTime.TotalMinutes;
 			if (minutes == 1)
 			{
@@ -127,7 +127,7 @@
 
 		#region Private Event Handlers
 
-		private void StatusWindow_Load(object sender, EventArgs e)
+		private void StatusWindow_Load(object? sender, EventArgs e)
 		{
 			// If the user has never positioned the window before, then move it near the system tray.
 			if (!this.formSaver.Load())
@@ -136,7 +136,7 @@
 			}
 		}
 
-		private void StatusWindow_VisibleChanged(object sender, EventArgs e)
+		private void StatusWindow_VisibleChanged(object? sender, EventArgs e)
 		{
 			if (this.Visible)
 			{
@@ -179,18 +179,18 @@
 			}
 		}
 
-		private void DismissButton_Click(object sender, EventArgs e)
+		private void DismissButton_Click(object? sender, EventArgs e)
 		{
 			this.Dismissed = true;
 			this.Hide();
 		}
 
-		private void SnoozeButton_ButtonClick(object sender, EventArgs e)
+		private void SnoozeButton_ButtonClick(object? sender, EventArgs e)
 		{
 			this.Snooze(Options.SnoozeTime);
 		}
 
-		private void SnoozeTimeItem_Click(object sender, EventArgs e)
+		private void SnoozeTimeItem_Click(object? sender, EventArgs e)
 		{
 			if (sender is ToolStripMenuItem item && item.Tag is TimeSpan snoozeTime)
 			{
