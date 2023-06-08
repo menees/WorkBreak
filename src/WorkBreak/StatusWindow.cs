@@ -11,6 +11,7 @@
 	using System.Text;
 	using System.Windows.Forms;
 	using Menees;
+	using Microsoft.Win32;
 
 	#endregion
 
@@ -28,6 +29,8 @@
 		{
 			this.InitializeComponent();
 			this.Icon = Properties.Resources.Icon32_Stopwatch_00;
+
+			SystemEvents.SessionEnded += (s, e) => Application.Exit();
 		}
 
 		#endregion
